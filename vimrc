@@ -1,4 +1,4 @@
-" LastModified: 2013-12-05 22:49:37
+" LastModified: 2013-12-12 22:57:03
 " based on http://github.com/jferris/config_files/blob/master/vimrc
 
 " Use Vim settings, rather then Vi settings (much better!).
@@ -13,6 +13,23 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 Bundle 'gmarik/vundle'
+Bundle 'tpope/vim-fugitive'
+" Bundle 'msanders/snipmate.vim'
+Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-git'
+Bundle 'ervandew/supertab'
+Bundle 'sontek/minibufexpl.vim'
+Bundle 'wincent/Command-T'
+Bundle 'mitechie/pyflakes-pathogen'
+Bundle 'mileszs/ack.vim'
+Bundle 'sjl/gundo.vim'
+Bundle 'fs111/pydoc.vim'
+Bundle 'vim-scripts/pep8'
+Bundle 'alfredodeza/pytest.vim'
+Bundle 'reinh/vim-makegreen'
+Bundle 'vim-scripts/TaskList.vim'
+Bundle 'vim-scripts/The-NERD-tree'
+Bundle 'sontek/rope-vim'
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
@@ -27,8 +44,23 @@ set showcmd" display incomplete commands
 " 快速匹配
 set incsearch" do incremental searching
 
+" softtabs, 2 spaces
+" tab为2个空格
+set tabstop=2
+" 当前行之间交错时使用2个空格 
+set shiftwidth=2
+" 输入tab时自动转换为空格
+set expandtab
+
+" always display the status line
+set laststatus=2
+
 " Don't use Ex mode, use Q for formatting
 map Q gq
+
+" 自定义命令
+" vim保存有root权限的文件，需要首字母为大写，%代表当前文件
+command -nargs=? Sudow :w !sudo tee %
 
 " This is an alternative that also works in block mode, but the deleted
 " text is lost and it only works for putting the current register.
@@ -119,19 +151,64 @@ endif " has("autocmd")
   " set foldtext=strpart(getline(v:foldstart),0,50).'\ ...\ '.substitute(getline(v:foldend),'^[\ #]*','','g').'\ '
 " endif
 
-" softtabs, 2 spaces
-" tab为2个空格
-set tabstop=2
-" 当前行之间交错时使用2个空格 
-set shiftwidth=2
-" 输入tab时自动转换为空格
-set expandtab
+" 启用代码折叠，使用za
+set foldmethod=indent
+set foldlevel=99
 
-" always display the status line
-set laststatus=2
+" 窗口拆分
+" 垂直拆分：按Ctrl + W + V
+" 水平拆分：按Ctrl + W + S
+" 关闭当前窗口：按Ctrl + W + Q
+" CTRL + W + <movement>在窗口中移动光标
+" 自定义事件
+"ctrl +j,k,l,h(下，上，右，左)
+
+map <c-j> <c-w>j
+map <c-k> <c-w>k
+map <c-l> <c-w>l
+map <c-h> <c-w>h
 
 " \ is the leader character
 let mapleader = ","
+
+" 标记某些代码为TODO或FIXME
+map <Leader>td <Plug>TaskList
+
+" 修订历史,查看文件每次保存之间的差别，并可以快速的回滚和恢复。
+map <Leader>g :GundoToggle<CR>
+
+" 文件浏览,项目文件浏览器
+map <Leader>n :NERDTreeToggle<CR>
+
+" 快速跳转到函数或类的定义和重命名（包括所有的引用）
+map <leader>j :RopeGotoDefinition<CR>
+map <leader>r :RopeRename<CR>
+
+" 模糊搜索代码中任何东西（包括变量名、类、方法等）,类似于grep
+nmap <leader>a <Esc>:Ack!
+
+" git
+" Fugitive还可以在vim中查看当前工作在哪个分支。将其添加到vim状态栏上
+" Gblame：逐行查看在上次更新以来的差异
+" Gwrite：缓存文件，基本上就是执行git add <文件名>
+" Gread： 运行git checkout <文件名>
+" Gcommit： 运行git commit命令。你可以在commit消息中使用Ctrl+N来自动补全，如使用test_all<Ctrl+N>来查找方法名。
+" %{fugitive#statusline()}
+
+" Add the virtualenv's site-packages to vim path
+py << EOF
+import os.path
+import sys
+import vim
+if 'VIRTUAL_ENV' in os.environ:
+    project_base_dir = os.environ['VIRTUAL_ENV']
+    sys.path.insert(0, project_base_dir)
+    activate_this = os.path.join(project_base_dir, 'bin/activate_this.py')
+    execfile(activate_this, dict(__file__=activate_this))
+EOF
+
+" python运行
+au BufRead *.py map <buffer> <F5> :w<CR>:!/usr/bin/env python % <CR>
 
 " edit the README_FOR_APP (makes :R commands work)
 map <Leader>R :e doc/README_FOR_APP<CR>
