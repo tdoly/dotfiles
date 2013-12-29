@@ -2,9 +2,7 @@
 vim dotfiles根据Ryan Bates的配置为基础为修改的。主要时加入了一些vimrc文件中到注释及每次修改时间到记录，加入了bundle包管理器，插件到安装方便多了。
 
 
-## Installation
-
-Run the following commands in your terminal. It will prompt you before it does anything destructive. Check out the [Rakefile](https://github.com/ryanb/dotfiles/blob/custom-bash-zsh/Rakefile) to see exactly what it does.
+## 安装
 
 ```terminal
 git clone git://github.com/tdoly/dotfiles ~/.dotfiles
@@ -12,44 +10,43 @@ cd ~/.dotfiles
 rake install
 ```
 
-After installing, open a new terminal window to see the effects.
+## 特性
 
-Feel free to customize the .zshrc file to match your preference.
+使用Bundle安装到包
 
+```vim
 
-## Features
-
-Many of the following features are added through the "rbates" Oh My ZSH plugin.
-
-I normally place all of my coding projects in ~/code, so this directory can easily be accessed (and tab completed) with the "c" command.
-
-```terminal
-c railsca<tab>
+Bundle 'gmarik/vundle'
+Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-git'
+Bundle 'ervandew/supertab'
+Bundle 'sontek/minibufexpl.vim'
+Bundle 'wincent/Command-T'
+Bundle 'mitechie/pyflakes-pathogen'
+Bundle 'mileszs/ack.vim'
+Bundle 'sjl/gundo.vim'
+Bundle 'fs111/pydoc.vim'
+Bundle 'vim-scripts/pep8'
+Bundle 'alfredodeza/pytest.vim'
+Bundle 'reinh/vim-makegreen'
+Bundle 'vim-scripts/TaskList.vim'
+Bundle 'vim-scripts/The-NERD-tree'
+Bundle 'sontek/rope-vim'
 ```
 
-There is also an "h" command which behaves similar, but acts on the home path.
+使用Bundle安装包，只需要在github上找到插件的名字，如<https://github.com/gmarik/vundle>，然后将Bundle 'gmarik/vundle'加入到vimrc文件中，运行BundleInstall便会自动安装
 
-```terminal
-h doc<tab>
-```
+snipmate单独列出
+snipmate.vim
 
-Tab completion is also added to rake and cap commands:
+## 配置及注解
 
-```
-rake db:mi<tab>
-cap de<tab>
-```
+详细配置见[vimrc](/vimrc)
 
-To speed things up, the results are cached in local .rake_tasks~ and .cap_tasks~. It is smart enough to expire the cache automatically in most cases, but you can simply remove the files to flush the cache.
+## 卸载
 
-If you're using git, you'll notice the current branch name shows up in the prompt while in a git repository.
-
-There are several features enabled in Ruby's irb including history and completion. Many convenience methods are added as well such as "ri" which can be used to get inline documentation in IRB. See irbrc file for details.
-
-
-## Uninstall
-
-To remove the dotfile configs, run the following commands. Be certain to double check the contents of the files before removing so you don't lose custom settings.
+移除dotfile配置，运行下面的命令。（dotfile的配置使用link实现的）然后删除自己存放的dotfile文件即可。
 
 ```
 unlink ~/.bin
@@ -65,5 +62,3 @@ rm -rf ~/.dotfiles
 rm -rf ~/.oh-my-zsh
 chsh -s /bin/bash # change back to Bash if you want
 ```
-
-Then open a new terminal window to see the effects.
